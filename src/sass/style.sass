@@ -1,0 +1,95 @@
+$bg-color: #ff1654
+$display-color: #e6dbc2
+$number-color: #3a3335 
+$equals-color: #eb5e55
+$calculator-color: #fdf0d5
+$operation-color: #4e598c
+
+$colors: (bg: #ff1654, display: #e6dbc2, number: #3a3335, equals: #eb5e55, calculator: #fdf0d5, operation: #4e598c )
+
+$button-width: 70px
+$button-height: 50px
+
+=button($type) 
+  .#{$type}
+    background-color: map-get($colors, #{$type})
+    border: 1px solid darken(map-get($colors, #{$type}), 10%)
+    box-shadow: 0px 3px darken(map-get($colors, #{$type}), 10%)
+    &:hover
+      background-color: lighten(map-get($colors, #{$type}), 5%)
+      box-shadow: 0px 2px darken(map-get($colors, #{$type}), 5%) 
+      top: 1px
+
+    &:active
+      background-color: darken(map-get($colors, #{$type}), 5%)
+      box-shadow: 0px 0px darken(map-get($colors, #{$type}), 5%) 
+      top: 3px
+
+
+html, body
+  margin: 0px
+  padding: 0px
+  font-family: 'Rubik', sans-serif
+  font-size: 30px
+
+body
+  background-color: map-get($colors, bg)
+  width: 100%
+  min-height: 100%
+  padding-top: 30px
+
+.calculator
+  background-color: map-get($colors, calculator)
+  margin: auto
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  width: 5*$button-width + 10*6px
+  padding: 10px
+  border-radius: 4px
+  // border: 1px solid darken(map-get($colors, calculator), 20%)
+  box-shadow: 0px 5px #aaa
+  border: 1px solid #aaa
+
+.display
+  width: calc(100% - 22px)
+  height: 70px
+  background-color: map-get($colors, display)
+  box-shadow: inset 0px 3px #ccc
+  border: 1px solid darken(map-get($colors, display), 20%)
+  margin: 5px
+  text-align: right
+  padding: 8px 5px 0px 5px
+  color: map-get($colors, number)
+  overflow-x: hidden
+
+  .expr
+    font-size: 16px
+  .current
+    font-size: 40px
+
+.button
+  position: relative
+  float: left
+  width: $button-width
+  height: $button-height
+  margin: 5px
+  background-color: map-get($colors, number)
+  border-radius: 2px
+  color: map-get($colors, calculator)
+
+  display: flex
+  align-items: center
+  justify-content: center
+
+  &:hover
+    cursor: pointer 
+
+.btn-backspace
+  font-size: 20px
+  font-weight: 700
+
+
+@each $type in number operation equals
+  +button($type)

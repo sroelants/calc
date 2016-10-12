@@ -38,19 +38,27 @@ body
   min-height: 100%
   padding-top: 30px
 
-.calculator
-  background-color: map-get($colors, calculator)
-  margin: auto
+.wrapper
   position: absolute
   top: 50%
   left: 50%
   transform: translate(-50%, -50%)
+  
+
+.calculator
+  background-color: map-get($colors, calculator)
+  margin: auto
   width: 5*$button-width + 10*6px
   padding: 10px
   border-radius: 4px
   // border: 1px solid darken(map-get($colors, calculator), 20%)
   box-shadow: 0px 5px #aaa
   border: 1px solid #aaa
+  float: left
+  // position: absolute
+  // top: 50%
+  // left: 50%
+  // transform: translate(-50%, -50%)
 
 .display
   width: calc(100% - 22px)
@@ -66,6 +74,7 @@ body
 
   .expr
     font-size: 16px
+    min-height: 19px
   .current
     font-size: 40px
 
@@ -86,10 +95,30 @@ body
   &:hover
     cursor: pointer 
 
-.btn-backspace
+.backspace
   font-size: 20px
   font-weight: 700
 
 
 @each $type in number operation equals
   +button($type)
+
+
+.error
+  background-color: darken(map-get($colors, equals), 10%)
+  border-radius: 2px
+  border: 1px solid darken(map-get($colors, equals), 20%)
+  width: 150px
+  font-size: 12px
+  color: white
+  padding: 10px
+  position: absolute
+  right: -180px
+  top: 155px
+  opacity: 0.0
+  transition: all 0.5s ease
+
+.visible
+  top: 15px
+  opacity: 1.0
+  transition: all 0.5s ease

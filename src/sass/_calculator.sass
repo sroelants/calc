@@ -1,0 +1,68 @@
+=button($type) 
+  .#{$type}
+    background-color: map-get($colors, #{$type})
+    border: 1px solid darken(map-get($colors, #{$type}), 10%)
+    box-shadow: 0px 3px darken(map-get($colors, #{$type}), 10%)
+    &:hover
+      background-color: lighten(map-get($colors, #{$type}), 5%)
+      box-shadow: 0px 2px darken(map-get($colors, #{$type}), 5%) 
+      top: 1px
+
+    &:active, &.active
+      background-color: darken(map-get($colors, #{$type}), 5%)
+      box-shadow: 0px 0px darken(map-get($colors, #{$type}), 5%) 
+      top: 3px
+
+.calculator
+  background-color: map-get($colors, calculator)
+  width: 410px 
+  height: 320px + 20px + 20px
+  margin: 20px 
+  padding: 2.70770% 2.32558%
+  border-radius: 4px
+  // border: 1px solid darken(map-get($colors, calculator), 20%)
+  box-shadow: 0px 5px #aaa
+  border: 1px solid #aaa
+  font-size: 0px
+
+.display
+  width: 95.12200
+  height: 20.27027%
+  background-color: map-get($colors, display)
+  box-shadow: inset 0px 3px #ccc
+  border: 1px solid darken(map-get($colors, display), 20%)
+  margin: 1.89189% 1.70733%
+  padding: 1.89189% 1.70733% 0px 1.70733% 
+  text-align: right
+  color: map-get($colors, number)
+  overflow: hidden
+
+  .expr
+    font-size: 16px
+    height: 30% 
+  .current
+    font-size: 40px
+    height: 60%
+
+
+.button
+  position: relative
+  font-size: 30px
+  width: 16.57%
+  height: 13.51351%
+  margin: 1.89189% 1.70733%
+  border-radius: 2px
+  color: map-get($colors, calculator)
+  overflow: hidden
+
+
+  display: inline-flex
+  align-items: center
+  justify-content: center
+
+  &:hover
+    cursor: pointer 
+
+@each $type in number operation equals
+  +button($type)
+

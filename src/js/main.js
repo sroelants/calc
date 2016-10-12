@@ -1,4 +1,4 @@
-var acHandler, backspaceHandler, buttonHandler, clearErrorBox, currEl, el, eqHandler, evalString, exprEl, exprString, i, lbHandler, len, numberHandler, operationHandler, putErrorBox, rbHandler, re, ref, unpaired;
+var acHandler, activateButton, backspaceHandler, buttonHandler, clearActive, clearErrorBox, currEl, el, eqHandler, evalString, exprEl, exprString, i, keyHandler, lbHandler, len, numberHandler, operationHandler, putErrorBox, rbHandler, re, ref, unpaired;
 
 exprEl = document.getElementsByClassName('expr')[0];
 
@@ -18,6 +18,14 @@ for (i = 0, len = ref.length; i < len; i++) {
   });
 }
 
+window.addEventListener("keypress", function(ev) {
+  return keyHandler(ev);
+});
+
+window.addEventListener("keyup", function(ev) {
+  return clearActive();
+});
+
 buttonHandler = function(text) {
   switch (text) {
     case "⌫":
@@ -29,10 +37,10 @@ buttonHandler = function(text) {
     case "=":
       eqHandler(text);
       break;
-    case "➕":
-    case "➖":
+    case "−":
     case "×":
-    case "➗":
+    case "+":
+    case "÷":
       operationHandler(text);
       break;
     case "(":
@@ -43,6 +51,69 @@ buttonHandler = function(text) {
       break;
     default:
       numberHandler(text);
+  }
+  return exprEl.textContent = exprString;
+};
+
+keyHandler = function(ev) {
+  var key;
+  key = ev.key != null ? ev.key : String.fromCharCode(ev.charCode);
+  switch (key) {
+    case "d":
+    case "Backspace":
+      ev.preventDefault();
+      activateButton("backspace");
+      backspaceHandler();
+      break;
+    case "c":
+      activateButton("ac");
+      acHandler();
+      break;
+    case "=":
+    case "Enter":
+      activateButton("equals");
+      eqHandler("=");
+      break;
+    case "-":
+      activateButton("minus");
+      operationHandler("−");
+      break;
+    case "+":
+      activateButton("plus");
+      operationHandler("+");
+      break;
+    case "/":
+      activateButton("div");
+      operationHandler("÷");
+      break;
+    case "*":
+      activateButton("times");
+      operationHandler("×");
+      break;
+    case "(":
+      activateButton("lb");
+      lbHandler();
+      break;
+    case ")":
+      activateButton("rb");
+      rbHandler();
+      break;
+    case "1":
+    case "2":
+    case "3":
+    case "4":
+    case "5":
+    case "6":
+    case "7":
+    case "8":
+    case "9":
+    case "0":
+      activateButton("btn-" + key);
+      numberHandler(key);
+      break;
+    case ".":
+      activateButton("dec");
+      numberHandler(".");
   }
   return exprEl.textContent = exprString;
 };
@@ -60,28 +131,28 @@ numberHandler = function(ch) {
 
 operationHandler = function(ch) {
   var ref1;
-  if (ch === "➖" && exprString.slice(-1) === "➖") {
+  if (ch === "−" && exprString.slice(-1) === "−") {
     putErrorBox("Don't use two consecutive minus signs");
     return;
   }
-  if (exprString.slice(-1) === "" && (ch === "➕" || ch === "×" || ch === "➗")) {
+  if (exprString.slice(-1) === "" && (ch === "×" || ch === "+" || ch === "÷")) {
     putErrorBox("Don't begin expression with an operator other than a minus sign.");
     return;
   }
-  if ((ch === "➕" || ch === "×" || ch === "➗") && ((ref1 = exprString.slice(-1)) === "➕" || ref1 === "×" || ref1 === "➗" || ref1 === "➖" || ref1 === "(")) {
+  if ((ch === "×" || ch === "+" || ch === "÷") && ((ref1 = exprString.slice(-1)) === "−" || ref1 === "×" || ref1 === "+" || ref1 === "÷" || ref1 === "(" || ref1 === ".")) {
     putErrorBox("Operators should be used between two legal expressions.");
     return;
   }
   clearErrorBox();
   exprString += ch;
   switch (ch) {
-    case "➕":
+    case "+":
       return evalString += "+";
     case "×":
       return evalString += "*";
-    case "➗":
+    case "÷":
       return evalString += "/";
-    case "➖":
+    case "−":
       return evalString += "-";
   }
 };
@@ -178,4 +249,20 @@ clearErrorBox = function() {
     };
     return setTimeout(del, 500);
   }
+};
+
+activateButton = function(button) {
+  var ref1;
+  return (ref1 = document.getElementsByClassName(button)[0]) != null ? ref1.classList.add("active") : void 0;
+};
+
+clearActive = function() {
+  var j, len1, ref1, results;
+  ref1 = document.getElementsByClassName("active");
+  results = [];
+  for (j = 0, len1 = ref1.length; j < len1; j++) {
+    el = ref1[j];
+    results.push(el != null ? el.classList.remove("active") : void 0);
+  }
+  return results;
 };

@@ -1,26 +1,3 @@
-exprEl = document.getElementsByClassName('expr')[0]
-currEl = document.getElementsByClassName('current')[0]
-exprString = ""
-evalString = ""
-re = /([0-9.]*)\D*$/ # pick out last integer, ignoring possible crap after
-
-for el in document.getElementsByClassName 'button'
-  el.addEventListener "click", (ev) -> buttonHandler(ev.target.textContent)
-
-buttonHandler = (text) ->
-
-  switch text
-    when "⌫" then backspaceHandler()
-    when "AC" then acHandler()
-    when  "=" then eqHandler(text)
-    when "➕", "➖", "×", "➗" then operationHandler(text)
-    when "(" then lbHandler()
-    when ")" then rbHandler()
-    else numberHandler(text)
-
-  exprEl.textContent = exprString
-
-
 # Handlers
 #
 # Number handler
@@ -40,24 +17,24 @@ numberHandler = (ch) ->
 # number).
 # Also translate unicode characters to ascii operators.
 operationHandler = (ch) ->
-  if ch is "➖" and exprString.slice(-1) is "➖"
+  if ch is "−" and exprString.slice(-1) is "−"
     putErrorBox "Don't use two consecutive minus signs"
     return
-  if exprString.slice(-1) is "" and ch in ["➕", "×", "➗"]
+  if exprString.slice(-1) is "" and ch in ["×", "+", "÷"]
       putErrorBox "Don't begin expression with an operator other than a minus sign."
       return
-  if ch in ["➕", "×", "➗"] and
-  exprString.slice(-1) in ["➕", "×", "➗", "➖", "("]
+  if ch in ["×", "+", "÷"] and
+  exprString.slice(-1) in ["−", "×", "+", "÷", "(", "."]
     putErrorBox "Operators should be used between two legal expressions."
     return
 
   clearErrorBox()
   exprString += ch
   switch ch
-    when "➕" then evalString += "+"
+    when "+" then evalString += "+"
     when "×" then evalString += "*"
-    when "➗" then evalString += "/"
-    when "➖" then evalString += "-"
+    when "÷" then evalString += "/"
+    when "−" then evalString += "-"
 
 # Left Bracket Handler
 # Left bracket can only appear after an operator or another opening bracket.
@@ -120,35 +97,4 @@ backspaceHandler = ->
   evalString = evalString.slice(0, -1)
   currEl.textContent = exprString.match(re)[1]
 
-# Get number of opening brackets - number of closing brackets present in string.
-unpaired = (str) ->
-  lbMatches = str.match(/\(/g)
-  rbMatches = str.match(/\)/g)
-  numberOfLb = if lbMatches? then lbMatches.length else 0
-  numberOfRb = if rbMatches? then rbMatches.length else 0
-  return numberOfLb - numberOfRb
 
-# Place the error box on the page, with transition
-putErrorBox = (msg) ->
-  clearErrorBox()
-
-  wrapper = document.getElementsByClassName("wrapper")[0]
-  err = document.createElement("div")
-  content = document.createTextNode(msg)
-  err.appendChild(content)
-  err.classList.add("error")
-  wrapper.appendChild(err)
-  
-  #Wait for DOM element to get created before adding class
-  vis = -> err.classList.add "visible"
-  setTimeout vis, 100
-
-
-clearErrorBox = ->
-  wrapper = document.getElementsByClassName("wrapper")[0]
-  # Check if there is an errorbox present. If so, remove it.
-  oldBox = wrapper.getElementsByClassName("error")[0]
-  if oldBox?
-    oldBox.classList.remove("visible")
-    del = -> wrapper.removeChild oldBox
-    setTimeout del, 500
